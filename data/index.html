@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+	<title>frp->树莓派->esp8266</title>
+</head>
+
+<body>
+<center>
+    <h2>原理图</h2>
+<a href="https://jc91715.top/blog/post/how-to-use-esp8266-to-build-web-server" target="_blank"><img src="/img/yuanlitu.png" alt="原理图"></a>
+<div id="demo">
+<h1>以下按钮可控制ESP8266开发板引脚</h1>
+ <br>
+  <button type="button" onclick="sendData(1)">点亮 LED</button>
+  <button type="button" onclick="sendData(0)">关闭 LED</button><br>
+</div>
+
+<div>
+    LED引脚状态 : <span id="LEDState">NA</span><br>
+</div>
+<br><br>
+<div id="demo">
+<h1>以下为模拟输入引脚A0的实时读数</h1>
+<div>
+    A0引脚读数 : <span id="ADCValue">0</span><br>
+</div>
+    <div>
+        <a href="https://jc91715.top/blog/post/how-to-use-esp8266-to-build-web-server">查看详细信息</a>
+    </div>
+    <!--显示时钟-->
+    <h3>页面支持JavaScript，以下时钟/日期使用JavaScript实现。</h3>
+    <h1 id="date"></h1>
+    <span id="msg" style="font-size: 30px;background-color: greenyellow;"></span>
+<script>
+function sendData(led) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("LEDState").innerHTML =
+      this.responseText;
+    }
+  };
+  xhttp.open("GET", "setLED?LEDstate="+led, true);
+  xhttp.send();
+}
+ 
+setInterval(function() {
+  // Call a function repetatively with 2 Second interval
+  getData();
+}, 2000); //2000mSeconds update rate
+ 
+function getData() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("ADCValue").innerHTML =
+      this.responseText;
+    }
+  };
+  xhttp.open("GET", "readADC", true);
+  xhttp.send();
+}
+</script>
+</center>
+<script type="text/javascript" src="clock.js"></script>
+
+</body>
+</html>
